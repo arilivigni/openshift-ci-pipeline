@@ -1,170 +1,108 @@
-Jenkins Docker Image
-====================
+# Jenkins Master example
 
-This repository contains Dockerfiles for a Jenkins Docker image intended for use with [OpenShift v3](https://github.com/openshift/origin)
+This directory contains an example of a Jenkins setup that is configured to
+demonstrate the CI/pipeline workflow for the sample-app application using the
+Jenkins Master/Slave setup and automation done on OpenShift v3.
 
-For an example of how to use it, [see this sample.](https://github.com/openshift/origin/blob/master/examples/jenkins/README.md)
+<p align="center">
+<img width="420" src="https://raw.githubusercontent.com/alivigni/openshift-ci-pipeline/master/jenkins-flow.png"/>
+</p>
 
-The image is pushed to DockerHub as openshift/jenkins-1-centos7.
+## Installation
 
-Versions
----------------------------------
-Jenkins versions currently provided are:
-* jenkins-1.6x
-
-RHEL versions currently supported are:
-* RHEL7
-
-CentOS versions currently supported are:
-* CentOS7
+To start, you have to manually enter following commands in OpenShift:
 
 
-Installation
----------------------------------
-Choose either the CentOS7 or RHEL7 based image:
+```console
+# Create project and allow Jenkins to talk to OpenShift API
+$ oc new-project ci
+$ oc policy add-role-to-user edit system:serviceaccount:ci:default
 
-*  **RHEL7 based image**
+# Create the 'staging' project where we deploy the sample-app for testing
+$ oc new-project stage
+$ oc policy add-role-to-user edit system:serviceaccount:stage:default
+$ oc policy add-role-to-user edit system:serviceaccount:ci:default
 
-    To build a RHEL7 based image, you need to run Docker build on a properly
-    subscribed RHEL machine.
-
-    ```
-    $ git clone https://github.com/openshift/jenkins.git
-    $ cd jenkins
-    $ make build TARGET=rhel7 VERSION=1
-    ```
-
-*  **CentOS7 based image**
-
-	This image is available on DockerHub. To download it run:
-
-	```
-	$ docker pull openshift/jenkins-1-centos7
-	```
-
-	To build a Jenkins image from scratch run:
-
-	```
-	$ git clone https://github.com/openshift/jenkins.git
-	$ cd jenkins
-	$ make build VERSION=1
-	```
-
-**Notice: By omitting the `VERSION` parameter, the build/test action will be performed
-on all provided versions of Jenkins. Since we are currently providing only version `1`,
-you can omit this parameter.**
-
-
-Environment variables
----------------------------------
-
-The image recognizes the following environment variables that you can set during
-initialization by passing `-e VAR=VALUE` to the Docker run command.
-
-|    Variable name          |    Description                              |
-| :------------------------ | -----------------------------------------   |
-|  `JENKINS_PASSWORD`       | Password for the 'admin' account            |
-
-
-
-You can also set the following mount points by passing the `-v /host:/container` flag to Docker.
-
-|  Volume mount point         | Description              |
-| :-------------------------- | ------------------------ |
-|  `/var/lib/jenkins`         | Jenkins config directory |
-
-**Notice: When mounting a directory from the host into the container, ensure that the mounted
-directory has the appropriate permissions and that the owner and group of the directory
-matches the user UID or name which is running inside the container.**
-
-
-Plugins
----------------------------------
-
-In order to install additional Jenkins plugins, the OpenShift Jenkins image provides a way
-how to add those by layering on top of this image. The derived image, will provide the same functionality
-as described in this documentation, in addition it will also include all plugins you list in the `plugins.txt` file.
-
-To create derived image, you have to write following `Dockerfile`:
-
-```
-FROM openshift/jenkins-1-centos7
-COPY plugins.txt /opt/openshift/configuration/plugins.txt
-RUN /usr/local/bin/plugins.sh /opt/openshift/configuration/plugins.txt
+# Now create the templates
+$ oc create -n ci -f https://raw.githubusercontent.com/alivigni/openshift-ci-pipeline/master/examples/master/jenkins-with-k8s-plugin.json
+$ oc create -n ci -f https://raw.githubusercontent.com/alivigni/openshift-ci-pipeline/master/examples/slave/s2i-slave-template.json
 ```
 
-The format of `plugins.txt` file is:
+## Instantiating templates from OpenShift web console
 
-```
-pluginId:pluginVersion
-```
+Navigate to the OpenShift UI and choose the `ci` project we created in the previous
+step. Now click *Add to Project* button and then click *Show All
+Template*. You should see *jenkins-master* template and *s2i-to-jenkins-slave*.
 
-For example, to install the github Jenkins plugin, you specify following to `plugins.txt`:
+Note: To continue, you have to first create your Jenkins Slave image. Please see
+the [instructions](../slave/README.md) here.
 
-```
-github:1.11.3
-```
+### Jenkins Master
 
-After this, just run `docker build -t my_jenkins_image -f Dockerfile`.
+This template defines a
+[BuildConfig](https://docs.openshift.org/latest/dev_guide/builds.html#defining-a-buildconfig)
+that use the [Docker
+Strategy](https://docs.openshift.org/latest/dev_guide/builds.html#docker-strategy-options)
+to rebuild the official [OpenShift Jenkins Image](https://github.com/openshift/jenkins).
+This template also defines a [Deployment Configuration](https://docs.openshift.org/latest/dev_guide/deployments.html#creating-a-deployment-configuration) that will start just one instance
+of the Jenkins server.
 
-Furthermore,  there are now 2 plugins of note included in this Jenkins Docker image that specifically facilitate the creation
-of CI/CD jobs and workflows for [OpenShift v3](https://github.com/openshift/origin):
+When you choose the `jenkins-master` template, you have to specify these parameters:
 
-* **OpenShift Pipeline plugin**
+* **JENKINS_SERVICE_NAME** - The name of the Jenkins service (default: *jenkins*)
+* **JENKINS_IMAGE** - The name of the original Jenkins image to use
+* **JENKINS_PASSWORD** - The Jenkins 'admin' user password
 
-  See [the following](https://github.com/openshift/jenkins-plugin), as well an example use of the plugin's capabilities with the [OpenShift Sample Job](https://github.com/openshift/jenkins/tree/master/1/contrib/openshift/configuration/jobs/OpenShift%20Sample)
-  included in this image.
+Once you instantiate this template, you should see a new service *jenkins* in
+the overview page and a route *https://jenkins-ci.router.default.svc.cluster.local/*.
 
-* **Kubernetes plugin**
+Optionally, you can configure your own repository with Jenkins plugins,
+configuration, etc by changing these parameters:
 
-  See [the following](https://github.com/jenkinsci/kubernetes-plugin), as well as the examples for constructing Jenkins [masters](https://github.com/openshift/jenkins/tree/master/examples/master) and
-  [slaves](https://github.com/openshift/jenkins/tree/master/examples/slave) that interact with [OpenShift v3](https://github.com/openshift/origin)
+* **JENKINS_S2I_REPO_URL** - The Git repository with your Jenkins configuration
+* **JENKINS_S2I_REPO_CONTEXTDIR** - The directory inside the repository
+* **JENKINS_S2I_REPO_REF** - Specify branch or Git ref
 
-Usage
----------------------------------
+You have to wait until OpenShift rebuilds the original image to include all
+plugins and configuration needed.
 
-For this, we will assume that you are using the `openshift/jenkins-1-centos7` image.
-If you want to set only the mandatory environment variables and store the database
-in the `/tmp/jenkins` directory on the host filesystem, execute the following command:
+### Sample Application
 
-```
-$ docker run -d -e JENKINS_PASSWORD=<password> -v /tmp/jenkins:/var/lib/jenkins openshift/jenkins-1-centos7
-```
+The last step is to instantiate the `sample-app` template. The [sample
+app](sample-app) is a simple Ruby application
+that runs Sinatra and has one unit test defined to exercise the CI flow.
 
+You have to instantiate the template in both `ci` and `stage` projects.
 
-Jenkins admin user
----------------------------------
+## Workflow
 
-The admin user name is set to `admin` and you have to to specify the password by
-setting the `JENKINS_PASSWORD` environment variable. This process is done
-upon initialization.
+You can [watch the youtube](https://www.youtube.com/watch?v=HsdmSaz1zhs)
+video that shows the full workflow. What happens in the video is:
 
+1. When the `sample-app-test` job is started it fetches the [sample-app](sample-app) sources,
+   installs all required rubygems using bundler and then executes the sample unit tests.
+   In the job definition, we restricted this job to run only on slaves that have
+   the *ruby-20-centos7* label. This will match the Kubernetes Pod Template you see
+   in the Kubernetes plugin configuration. Once this job is started and queued,
+   the plugin connects to OpenShift and starts the slave Pod using the converted
+   S2I image. The job then runs entirely on that slave.
+   When this job finishes, the Pod is automatically destroyed by the Kubernetes
+   plugin.
 
-Test
----------------------------------
+2. If the unit tests passed, the `sample-app-build` is started automatically via
+   the Jenkins [promoted builds](https://wiki.jenkins-ci.org/display/JENKINS/Promoted+Builds+Plugin)
+   plugin. This job will leverage the OpenShift Jenkins plugin and start
+   build of the Docker image which will contain 'sample-app'.
 
-This repository also provides a test framework which checks basic functionality
-of the Jenkins image.
+3. Once the new Docker image for the `sample-app` is built, the
+   `sample-app-stage` project will automatically deploy it into `stage` project
+   and notify the QA team about availability for testing.
 
-Users can choose between testing Jenkins based on a RHEL or CentOS image.
+3. If the `sample-app` image passes the `stage` testing, you have to **manually
+   promote** the `sample-app-build` build to be deployed to OpenShift. Since
+   re-deploying the application replaces the existing running application, human
+   intervention is needed to confirm this step.
 
-*  **RHEL based image**
-
-    To test a RHEL7 based Jenkins image, you need to run the test on a properly
-    subscribed RHEL machine.
-
-    ```
-    $ cd jenkins
-    $ make test TARGET=rhel7 VERSION=5.5
-    ```
-
-*  **CentOS based image**
-
-    ```
-    $ cd jenkins
-    $ make test VERSION=1
-    ```
-
-**Notice: By omitting the `VERSION` parameter, the build/test action will be performed
-on all provided versions of Jenkins. Since we are currently providing only version `1`,
-you can omit this parameter.**
+4. Once the build is promoted, the `sample-app-deploy` job is started. This job
+   will scale down the existing application deployment and redeploy it using the
+   new Docker image.
