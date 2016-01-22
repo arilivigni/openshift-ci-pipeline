@@ -27,7 +27,7 @@
     {
       "name": "SLAVE_S2I_REPO_URL",
       "description": "Repository to use for the build",
-      "value": "git://github.com/openshift/jenkins.git"
+      "value": "git://github.com/alivigni/openshift-ci-pipeline.git"
     },
     {
       "name": "SLAVE_S2I_REPO_CONTEXTDIR",
