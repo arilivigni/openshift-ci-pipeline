@@ -16,7 +16,7 @@
     {
       "name": "IMAGE_STREAM_NAME",
       "description": "The name of the to build the slave from",
-      "value": "ruby-20-centos7",
+      "value": "ruby-22-centos7",
       "required": true
     },
     {
@@ -27,7 +27,7 @@
     {
       "name": "SLAVE_S2I_REPO_URL",
       "description": "Repository to use for the build",
-      "value": "git://github.com/alivigni/openshift-ci-pipeline.git"
+      "value": "git://github.com/arilivigni/openshift-ci-pipeline"
     },
     {
       "name": "SLAVE_S2I_REPO_CONTEXTDIR",
