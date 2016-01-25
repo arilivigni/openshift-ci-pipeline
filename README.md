@@ -5,7 +5,7 @@ demonstrate the CI/pipeline workflow for the sample-app application using the
 Jenkins Master/Slave setup and automation done on OpenShift v3.
 
 <p align="center">
-<img width="420" src="https://raw.githubusercontent.com/alivigni/openshift-ci-pipeline/master/jenkins-flow.png"/>
+<img width="420" src="https://raw.githubusercontent.com/arilivigni/openshift-ci-pipeline/master/jenkins-flow.png"/>
 </p>
 
 ## Installation
@@ -27,8 +27,8 @@ $ oc policy add-role-to-user edit system:serviceaccount:ci:default
 $ oc create -n stage -f sample-app/sample-app-template.json
 
 # Now create the templates
-$ oc create -n ci -f https://raw.githubusercontent.com/alivigni/openshift-ci-pipeline/master/examples/master/jenkins-with-k8s-plugin.json
-$ oc create -n ci -f https://raw.githubusercontent.com/alivigni/openshift-ci-pipeline/master/examples/slave/s2i-slave-template.json
+$ oc create -n ci -f https://raw.githubusercontent.com/arilivigni/openshift-ci-pipeline/master/examples/master/jenkins-with-k8s-plugin.json
+$ oc create -n ci -f https://raw.githubusercontent.com/arilivigni/openshift-ci-pipeline/master/examples/slave/s2i-slave-template.json
 ```
 
 ## Instantiating templates from OpenShift web console
