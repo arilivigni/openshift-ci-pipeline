@@ -38,7 +38,7 @@ step. Now click *Add to Project* button and then click *Show All
 Template*. You should see *jenkins-master* template and *s2i-to-jenkins-slave*.
 
 Note: To continue, you have to first create your Jenkins Slave image. Please see
-the [instructions](../slave/README.md) here.
+the [instructions](examples/slave/README.md) here.
 
 ### Jenkins Master
 
