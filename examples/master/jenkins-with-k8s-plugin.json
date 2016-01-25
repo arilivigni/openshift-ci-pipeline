@@ -32,7 +32,7 @@
     {
       "name": "JENKINS_S2I_REPO_URL",
       "description": "The repository to use to build the Jenkins master",
-      "value": "git://github.com/alivigni/openshift-ci-pipeline.git"
+      "value": "git://github.com/mfojtik/openshift-ci-pipeline"
     },
     {
       "name": "JENKINS_S2I_REPO_CONTEXTDIR",
@@ -42,7 +42,7 @@
     {
       "name": "JENKINS_S2I_REPO_REF",
       "description": "The GIT ref to use to build the sources",
-      "value": "master"
+      "value": "demo"
     }
   ],
   "objects": [
@@ -142,6 +142,7 @@
         "strategy": {
           "type": "Source",
           "sourceStrategy": {
+            "scripts": "https://raw.githubusercontent.com/arilivigni/openshift-ci-pipeline/master/examples/master/.s2i/bin",
             "from": {
               "kind": "DockerImage",
               "name": "${JENKINS_IMAGE}"

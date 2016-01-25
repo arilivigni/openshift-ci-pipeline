@@ -40,15 +40,15 @@
 
     <com.openshift.jenkins.plugins.pipeline.OpenShiftDeployer>
       <apiURL>https://openshift.default.svc.cluster.local</apiURL>
-      <depCfg>frontend</depCfg>
-      <namespace>ci</namespace>
+      <depCfg>sample-app</depCfg>
+      <namespace>stage</namespace>
       <authToken></authToken>
     </com.openshift.jenkins.plugins.pipeline.OpenShiftDeployer>
     
     <com.openshift.jenkins.plugins.pipeline.OpenShiftDeploymentVerifier>
       <apiURL>https://openshift.default.svc.cluster.local</apiURL>
-      <depCfg>frontend</depCfg>
-      <namespace>ci</namespace>
+      <depCfg>sample-app</depCfg>
+      <namespace>stage</namespace>
       <replicaCount>1</replicaCount>
       <authToken></authToken>
     </com.openshift.jenkins.plugins.pipeline.OpenShiftDeploymentVerifier>
