@@ -22,7 +22,7 @@
     <imageStreamName>sample-app</imageStreamName>
     <tag>latest</tag>
     <apiURL>https://openshift.default.svc.cluster.local</apiURL>
-    <namespace>ci</namespace>
+    <namespace>stage</namespace>
     <authToken></authToken>
   </scm>
   <assignedNode>master</assignedNode>

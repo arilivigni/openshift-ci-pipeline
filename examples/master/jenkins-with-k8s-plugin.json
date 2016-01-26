@@ -32,7 +32,7 @@
     {
       "name": "JENKINS_S2I_REPO_URL",
       "description": "The repository to use to build the Jenkins master",
-      "value": "git://github.com/mfojtik/openshift-ci-pipeline"
+      "value": "git://github.com/alivigni/openshift-ci-pipeline"
     },
     {
       "name": "JENKINS_S2I_REPO_CONTEXTDIR",
@@ -42,7 +42,7 @@
     {
       "name": "JENKINS_S2I_REPO_REF",
       "description": "The GIT ref to use to build the sources",
-      "value": "demo"
+      "value": "master"
     }
   ],
   "objects": [
