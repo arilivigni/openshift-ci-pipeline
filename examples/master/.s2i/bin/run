@@ -66,10 +66,6 @@ if [ -f "${JENKINS_HOME}/credentials.xml.tpl" ]; then
   envsubst < "${JENKINS_HOME}/credentials.xml.tpl" > "${JENKINS_HOME}/credentials.xml"
 fi
 
-# Install python-pip and Jenkins Job Builder
-yum install -y python-pip
-pip install jenkins-job-builder
-
 rm -rf /tmp/war
 
 # Don't show these in the Jenkins UI
