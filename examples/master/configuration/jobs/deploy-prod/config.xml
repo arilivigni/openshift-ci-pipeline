@@ -38,6 +38,14 @@
   <triggers/>
   <concurrentBuild>false</concurrentBuild>
   <builders>
+    <hudson.tasks.Shell>
+      <command>set +x
+source /var/lib/jenkins/jenkins-common.sh
+
+echo &quot;Tagging stage/sample-app to production ...&quot;
+$oc_cmd tag stage/sample-app:latest prod/sample-app:latest
+</command>
+    </hudson.tasks.Shell>
     <com.openshift.jenkins.plugins.pipeline.OpenShiftDeployer plugin="openshift-pipeline@1.0.7">
       <apiURL>https://openshift.default.svc.cluster.local</apiURL>
       <namespace>prod</namespace>

@@ -14,7 +14,7 @@
     </se.diabol.jenkins.pipeline.PipelineProperty>
     <hudson.plugins.promoted__builds.JobPropertyImpl plugin="promoted-builds@2.24.1">
       <activeProcessNames>
-        <string>Deploy</string>
+        <string>Stage</string>
       </activeProcessNames>
     </hudson.plugins.promoted__builds.JobPropertyImpl>
     <com.sonyericsson.rebuild.RebuildSettings plugin="rebuild@1.25">
