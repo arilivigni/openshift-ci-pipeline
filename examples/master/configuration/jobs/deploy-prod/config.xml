@@ -10,48 +10,41 @@
   </logRotator>
   <keepDependencies>false</keepDependencies>
   <properties>
-    <com.chikli.hudson.plugin.naginator.NaginatorOptOutProperty plugin="naginator@1.15">
+    <hudson.plugins.disk__usage.DiskUsageProperty plugin="disk-usage@0.28"/>
+    <com.chikli.hudson.plugin.naginator.NaginatorOptOutProperty plugin="naginator@1.16.1">
       <optOut>false</optOut>
     </com.chikli.hudson.plugin.naginator.NaginatorOptOutProperty>
-    <se.diabol.jenkins.pipeline.PipelineProperty plugin="delivery-pipeline-plugin@0.8.11">
-      <taskName>Stage</taskName>
+    <se.diabol.jenkins.pipeline.PipelineProperty plugin="delivery-pipeline-plugin@0.9.8">
+      <taskName>Production</taskName>
       <stageName>Deploy</stageName>
     </se.diabol.jenkins.pipeline.PipelineProperty>
+    <com.sonyericsson.rebuild.RebuildSettings plugin="rebuild@1.25">
+      <autoRebuild>false</autoRebuild>
+      <rebuildDisabled>false</rebuildDisabled>
+    </com.sonyericsson.rebuild.RebuildSettings>
+    <hudson.plugins.throttleconcurrents.ThrottleJobProperty plugin="throttle-concurrents@1.8.4">
+      <maxConcurrentPerNode>0</maxConcurrentPerNode>
+      <maxConcurrentTotal>0</maxConcurrentTotal>
+      <throttleEnabled>false</throttleEnabled>
+      <throttleOption>project</throttleOption>
+    </hudson.plugins.throttleconcurrents.ThrottleJobProperty>
   </properties>
-  <scm class="com.openshift.jenkins.plugins.pipeline.OpenShiftImageStreams" plugin="openshift-jenkins-buildutils@1.0-SNAPSHOT">
-    <imageStreamName>sample-app</imageStreamName>
-    <tag>latest</tag>
-    <apiURL>https://openshift.default.svc.cluster.local</apiURL>
-    <namespace>stage</namespace>
-    <authToken></authToken>
-  </scm>
+  <scm class="hudson.scm.NullSCM"/>
   <assignedNode>master</assignedNode>
   <canRoam>false</canRoam>
   <disabled>false</disabled>
   <blockBuildWhenDownstreamBuilding>false</blockBuildWhenDownstreamBuilding>
   <blockBuildWhenUpstreamBuilding>false</blockBuildWhenUpstreamBuilding>
-  <triggers>
-    <hudson.triggers.SCMTrigger>
-      <spec>H/2 * * * *</spec>
-      <ignorePostCommitHooks>false</ignorePostCommitHooks>
-    </hudson.triggers.SCMTrigger>
-  </triggers>
+  <triggers/>
   <concurrentBuild>false</concurrentBuild>
   <builders>
-    <com.openshift.jenkins.plugins.pipeline.OpenShiftScaler plugin="openshift-pipeline@1.0">
+    <com.openshift.jenkins.plugins.pipeline.OpenShiftDeployer plugin="openshift-pipeline@1.0.7">
       <apiURL>https://openshift.default.svc.cluster.local</apiURL>
-      <depCfg>sample-app</depCfg>
-      <namespace>stage</namespace>
-      <replicaCount>0</replicaCount>
+      <namespace>prod</namespace>
       <authToken></authToken>
-    </com.openshift.jenkins.plugins.pipeline.OpenShiftScaler>
-    <com.openshift.jenkins.plugins.pipeline.OpenShiftScaler plugin="openshift-pipeline@1.0">
-      <apiURL>https://openshift.default.svc.cluster.local</apiURL>
+      <verbose>false</verbose>
       <depCfg>sample-app</depCfg>
-      <namespace>stage</namespace>
-      <replicaCount>1</replicaCount>
-      <authToken></authToken>
-    </com.openshift.jenkins.plugins.pipeline.OpenShiftScaler>
+    </com.openshift.jenkins.plugins.pipeline.OpenShiftDeployer>
   </builders>
   <publishers>
     <hudson.tasks.Mailer plugin="mailer@1.11">
@@ -62,4 +55,3 @@
   </publishers>
   <buildWrappers/>
 </project>
-
