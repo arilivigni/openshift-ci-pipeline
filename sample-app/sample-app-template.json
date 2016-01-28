@@ -82,22 +82,6 @@
                     "resources": {}
                 },
                 "triggers": [
-                    {
-                        "type": "ConfigChange"
-                    },
-                    {
-                        "type": "ImageChange",
-                        "imageChangeParams": {
-                            "automatic": true,
-                            "containerNames": [
-                                "sample-app"
-                            ],
-                            "from": {
-                                "kind": "ImageStreamTag",
-                                "name": "sample-app:latest"
-                            }
-                        }
-                    }
                 ],
                 "replicas": 1,
                 "selector": {

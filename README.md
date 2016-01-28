@@ -23,8 +23,14 @@ $ oc new-project stage
 $ oc policy add-role-to-user edit system:serviceaccount:stage:default
 $ oc policy add-role-to-user edit system:serviceaccount:ci:default
 
+# Create the 'staging' project where we deploy the sample-app for testing
+$ oc new-project prod
+$ oc policy add-role-to-user edit system:serviceaccount:prod:default
+$ oc policy add-role-to-user edit system:serviceaccount:stage:default
+
 # Create the sample application in the 'stage' namespace:
 $ oc create -n stage -f https://raw.githubusercontent.com/arilivigni/openshift-ci-pipeline/master/sample-app/sample-app-template.json
+$ oc create -n prod -f https://raw.githubusercontent.com/arilivigni/openshift-ci-pipeline/master/sample-app/sample-app-template.json
 
 # Now create the templates
 $ oc create -n ci -f https://raw.githubusercontent.com/arilivigni/openshift-ci-pipeline/master/examples/master/jenkins-with-k8s-plugin.json

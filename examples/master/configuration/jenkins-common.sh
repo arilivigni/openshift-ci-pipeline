@@ -34,8 +34,11 @@ function convert_is_to_slave() {
     <name>{{.metadata.name}}</name>
     <image>{{.status.dockerImageRepository}}</image>
     <privileged>false</privileged>
-    <remoteFs>{{if index .metadata.annotations \"slave-directory\"}}{{index .metadata.annotations \"slave-directory\"}}{{else}}${DEFAULT_SLAVE_DIRECTORY}{{end}}</remoteFs>
+    <command></command>
+    <args></args>
     <instanceCap>5</instanceCap>
+    <volumes/>
+    <remoteFs>{{if index .metadata.annotations \"slave-directory\"}}{{index .metadata.annotations \"slave-directory\"}}{{else}}${DEFAULT_SLAVE_DIRECTORY}{{end}}</remoteFs>
     <label>{{if index .metadata.annotations \"slave-label\"}}{{index .metadata.annotations \"slave-label\"}}{{else}}${name}{{end}}</label>
   </org.csanchez.jenkins.plugins.kubernetes.PodTemplate>
   "
@@ -74,7 +77,7 @@ function generate_kubernetes_config() {
     fi
     [ -z "${slave_templates}" ] && return
     echo "
-    <org.csanchez.jenkins.plugins.kubernetes.KubernetesCloud plugin=\"kubernetes@0.4-SNAPSHOT\">
+    <org.csanchez.jenkins.plugins.kubernetes.KubernetesCloud plugin=\"kubernetes@0.5\">
       <name>openshift</name>
       <templates>
         ${slave_templates}
@@ -85,6 +88,7 @@ function generate_kubernetes_config() {
       <jenkinsUrl>http://jenkins:8080</jenkinsUrl>
       <credentialsId>1a12dfa4-7fc5-47a7-aa17-cc56572a41c7</credentialsId>
       <containerCap>10</containerCap>
+      <retentionTimeout>5</retentionTimeout>
     </org.csanchez.jenkins.plugins.kubernetes.KubernetesCloud>
     "
 }
