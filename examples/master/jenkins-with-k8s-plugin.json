@@ -142,7 +142,6 @@
         "strategy": {
           "type": "Source",
           "sourceStrategy": {
-            "scripts": "https://raw.githubusercontent.com/arilivigni/openshift-ci-pipeline/master/examples/master/.s2i/bin",
             "from": {
               "kind": "DockerImage",
               "name": "${JENKINS_IMAGE}"
