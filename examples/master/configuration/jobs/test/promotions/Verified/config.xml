@@ -17,7 +17,7 @@
   <icon>star-gold</icon>
   <buildSteps>
     <hudson.tasks.BuildTrigger>
-      <childProjects>sample-app-build</childProjects>
+      <childProjects>build</childProjects>
       <threshold>
         <name>SUCCESS</name>
         <ordinal>0</ordinal>

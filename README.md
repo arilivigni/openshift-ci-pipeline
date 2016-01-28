@@ -23,7 +23,7 @@ $ oc new-project stage
 $ oc policy add-role-to-user edit system:serviceaccount:stage:default
 $ oc policy add-role-to-user edit system:serviceaccount:ci:default
 
-# Create the 'staging' project where we deploy the sample-app for testing
+# Create the 'prod' project where we deploy the sample-app for testing
 $ oc new-project prod
 $ oc policy add-role-to-user edit system:serviceaccount:prod:default
 $ oc policy add-role-to-user edit system:serviceaccount:stage:default
