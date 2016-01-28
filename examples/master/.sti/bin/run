@@ -67,12 +67,14 @@ if [ -f "${JENKINS_HOME}/credentials.xml.tpl" ]; then
 fi
 
 # Install jenkins-job-builder
+pushd ${JENKINS_HOME}
 curl -O https://bootstrap.pypa.io/ez_setup.py
 python ez_setup.py --user
 curl -O https://bootstrap.pypa.io/get-pip.py
 python get-pip.py --user
 export PATH=$PATH:./.local/bin
 pip install --user jenkins-job-builder
+popd
 
 rm -rf /tmp/war
 
