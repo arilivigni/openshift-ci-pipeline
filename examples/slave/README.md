@@ -65,7 +65,7 @@ provide the username for the random UID the container will run as and a shell
 script that we launch as an entrypoint from Jenkins.
 
 When you choose `s2i-to-jenkins-slave` template, you have to specify the image
-name you want to convert. The default value is `ruby-20-centos7`, but you can
+name you want to convert. The default value is `ruby-22-centos7`, but you can
 change it to any available ImageStream you have in OpenShift.
 
 Once you instantiate the template, go to *Browse/Builds* where you can see that

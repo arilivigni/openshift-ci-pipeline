@@ -14,30 +14,33 @@ To start, you have to manually enter following commands in OpenShift:
 
 
 ```console
-# Create project and allow Jenkins to talk to OpenShift API
+## Create project and allow Jenkins to talk to OpenShift API
+
+# Create all necessary projects 'ci', 'stage', 'prod'
 $ oc new-project ci
-
-# Create the 'staging' project where we deploy the sample-app for testing
 $ oc new-project stage
-
-# Create the 'prod' project where we deploy the sample-app for testing
 $ oc new-project prod
-
-# Allow the CI user where the Jenkins runs access all projects
-$ oc policy add-role-to-user edit system:serviceaccount:ci:default -n ci
-$ oc policy add-role-to-user edit system:serviceaccount:ci:default -n stage
-$ oc policy add-role-to-user edit system:serviceaccount:ci:default -n prod
 
 # Create the 'prod' project where we deploy the sample-app for testing
 $ oc new-project prod
 $ oc policy add-role-to-user edit system:serviceaccount:prod:default
 $ oc policy add-role-to-user edit system:serviceaccount:stage:default
 
-# Create the sample application in the 'stage' namespace:
+# Allow the CI user where the Jenkins runs access all projects
+$ oc policy add-role-to-user edit system:serviceaccount:ci:default -n ci
+$ oc policy add-role-to-user edit system:serviceaccount:ci:default -n stage
+$ oc policy add-role-to-user edit system:serviceaccount:ci:default -n prod
+
+# Add roles for 'stage' and 'prod' projects
+$ oc new-project prod
+$ oc policy add-role-to-user edit system:serviceaccount:prod:default
+$ oc policy add-role-to-user edit system:serviceaccount:stage:default
+
+# Create the sample application in the 'stage' and 'prod' namespaces:
 $ oc create -n stage -f https://raw.githubusercontent.com/arilivigni/openshift-ci-pipeline/master/sample-app/sample-app-template.json
 $ oc create -n prod -f https://raw.githubusercontent.com/arilivigni/openshift-ci-pipeline/master/sample-app/sample-app-template.json
 
-# Now create the templates
+# Now create the Jenkins Master and Slave templates in the 'ci' namespace:
 $ oc create -n ci -f https://raw.githubusercontent.com/arilivigni/openshift-ci-pipeline/master/examples/master/jenkins-with-k8s-plugin.json
 $ oc create -n ci -f https://raw.githubusercontent.com/arilivigni/openshift-ci-pipeline/master/examples/slave/s2i-slave-template.json
 ```
@@ -96,7 +99,7 @@ video that shows the full workflow. What happens in the video is:
 1. When the `sample-app-test` job is started it fetches the [sample-app](sample-app) sources,
    installs all required rubygems using bundler and then executes the sample unit tests.
    In the job definition, we restricted this job to run only on slaves that have
-   the *ruby-20-centos7* label. This will match the Kubernetes Pod Template you see
+   the *ruby-22-centos7* label. This will match the Kubernetes Pod Template you see
    in the Kubernetes plugin configuration. Once this job is started and queued,
    the plugin connects to OpenShift and starts the slave Pod using the converted
    S2I image. The job then runs entirely on that slave.

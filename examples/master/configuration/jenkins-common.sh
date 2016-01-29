@@ -10,6 +10,7 @@ export AUTH_TOKEN=/run/secrets/kubernetes.io/serviceaccount/token
 export JENKINS_PASSWORD KUBERNETES_SERVICE_HOST KUBERNETES_SERVICE_PORT
 export ITEM_ROOTDIR="\${ITEM_ROOTDIR}" # Preserve this variable Jenkins has in config.xml
 export K8S_PLUGIN_POD_TEMPLATES=""
+export PATH=$PATH:${JENKINS_HOME}/.local/bin
 
 export oc_auth="--token=$(cat $AUTH_TOKEN) --certificate-authority=${KUBE_CA}"
 export oc_cmd="oc -n ${PROJECT_NAME} --server=$OPENSHIFT_API_URL ${oc_auth}"
