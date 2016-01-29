@@ -16,12 +16,17 @@ To start, you have to manually enter following commands in OpenShift:
 ```console
 # Create project and allow Jenkins to talk to OpenShift API
 $ oc new-project ci
-$ oc policy add-role-to-user edit system:serviceaccount:ci:default
 
 # Create the 'staging' project where we deploy the sample-app for testing
 $ oc new-project stage
-$ oc policy add-role-to-user edit system:serviceaccount:stage:default
-$ oc policy add-role-to-user edit system:serviceaccount:ci:default
+
+# Create the 'staging' project where we deploy the sample-app for testing
+$ oc new-project prod
+
+# Allow the CI user where the Jenkins runs access all projects
+$ oc policy add-role-to-user edit system:serviceaccount:ci:default -n ci
+$ oc policy add-role-to-user edit system:serviceaccount:ci:default -n stage
+$ oc policy add-role-to-user edit system:serviceaccount:ci:default -n prod
 
 # Create the 'prod' project where we deploy the sample-app for testing
 $ oc new-project prod
