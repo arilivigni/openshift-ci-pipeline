@@ -27,6 +27,7 @@ $ oc policy add-role-to-user edit system:serviceaccount:ci:default -n stage
 $ oc policy add-role-to-user edit system:serviceaccount:ci:default -n prod
 
 # Add roles for 'stage' and 'prod' projects
+$ oc project prod
 $ oc policy add-role-to-user edit system:serviceaccount:stage:default
 $ oc policy add-role-to-user edit system:serviceaccount:prod:default
 

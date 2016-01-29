@@ -47,7 +47,8 @@
                     "sourceStrategy": {
                         "from": {
                             "kind": "ImageStreamTag",
-                            "name": "sample-app:latest"
+                            "namespace": "openshift",
+                            "name": "ruby:latest"
                         }
                     }
                 },
