@@ -20,7 +20,7 @@ $ oc new-project ci
 # Create the 'staging' project where we deploy the sample-app for testing
 $ oc new-project stage
 
-# Create the 'staging' project where we deploy the sample-app for testing
+# Create the 'prod' project where we deploy the sample-app for testing
 $ oc new-project prod
 
 # Allow the CI user where the Jenkins runs access all projects
