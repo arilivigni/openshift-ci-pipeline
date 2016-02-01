@@ -1,0 +1,112 @@
+- defaults:
+    name: os-ci-pipeline-defaults
+    logrotate:
+        numToKeep: 5
+        artifactNumToKeep: 5
+    wrappers:
+        - ansicolor:
+            colormap: css
+        - workspace-cleanup
+        - timestamps
+
+- job-template:
+    name: 'test'
+    defaults: os-ci-pipeline-defaults
+    description: |
+      Build and verify the sample Ruby application
+    concurrent: false
+    node: ruby-22-centos7
+    properties:
+      - delivery-pipeline:
+          stage: Build
+          task: Change Verification
+      - promoted-build:
+          names:
+            - "Verified"
+    builders:
+      - shell: |
+          # Install the rubygems
+          bundle install --path=./vendor
+
+          # Execute simple unit test
+          bundle exec rake test
+
+- job-template:
+    name: 'build'
+    defaults: os-ci-pipeline-defaults
+    description: |
+      Starts a build in OpenShift
+    concurrent: false
+    node: master
+    properties:
+      - delivery-pipeline:
+          stage: Build
+          task: Build Docker Image
+    builders:
+      - openshift-builder:
+          api-url: https://openshift.default.svc.cluster.local
+          bld-cfg: sample-app
+          namespace: stage
+      - openshift-dep-verify:
+          api-url: https://openshift.default.svc.cluster.local
+          dep-cfg: sample-app
+          namespace: stage
+          replicas: 1
+
+- job-template:
+    name: 'deploy-stage'
+    defaults: os-ci-pipeline-defaults
+    description: |
+      Deploys the sample application into the stage project
+    concurrent: false
+    node: master
+    properties:
+      - delivery-pipeline:
+          stage: Depoy
+          task: Application Deploy
+    builders:
+      - openshift-scaler:
+          api-url: https://openshift.default.svc.cluster.local
+          dep-cfg: sample-app
+          namespace: stage
+          replicas: 1
+      - openshift-dep-verify:
+          api-url: https://openshift.default.svc.cluster.local
+          dep-cfg: sample-app
+          namespace: stage
+          replicas: 1
+
+- job-template:
+    name: 'deploy-prod'
+    defaults: os-ci-pipeline-defaults
+    description: |
+      Deploys the sample application into the prod project
+    concurrent: false
+    node: master
+    properties:
+      - delivery-pipeline:
+          stage: Deploy
+          task: Production
+    builders:
+      - shell: |
+          set +x
+          source /var/lib/jenkins/jenkins-common.sh
+
+          echo "Tagging stage/sample-app to production ..."
+          $oc_cmd tag stage/sample-app:latest prod/sample-app:latest
+
+      - openshift-deployer:
+          api-url: https://openshift.default.svc.cluster.local
+          dep-cfg: sample-app
+          namespace: prod
+    publishers:
+      - email:
+          recipients: ari@redhat.com
+
+- project:
+    name: os-ci-pipeline
+    jobs:
+      - 'test'
+      - 'build'
+      - 'deploy-stage'
+      - 'deploy-prod'
