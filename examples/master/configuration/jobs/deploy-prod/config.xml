@@ -2,14 +2,16 @@
 <project>
   <actions/>
   <description>Deploys the sample application into prod project</description>
-  <logRotator class="hudson.tasks.LogRotator">
-    <daysToKeep>-1</daysToKeep>
-    <numToKeep>5</numToKeep>
-    <artifactDaysToKeep>-1</artifactDaysToKeep>
-    <artifactNumToKeep>-1</artifactNumToKeep>
-  </logRotator>
   <keepDependencies>false</keepDependencies>
   <properties>
+    <jenkins.model.BuildDiscarderProperty>
+      <strategy class="hudson.tasks.LogRotator">
+        <daysToKeep>-1</daysToKeep>
+        <numToKeep>5</numToKeep>
+        <artifactDaysToKeep>-1</artifactDaysToKeep>
+        <artifactNumToKeep>-1</artifactNumToKeep>
+      </strategy>
+    </jenkins.model.BuildDiscarderProperty>
     <hudson.plugins.disk__usage.DiskUsageProperty plugin="disk-usage@0.28"/>
     <com.chikli.hudson.plugin.naginator.NaginatorOptOutProperty plugin="naginator@1.16.1">
       <optOut>false</optOut>
@@ -43,16 +45,9 @@
 source /var/lib/jenkins/jenkins-common.sh
 
 echo &quot;Tagging stage/sample-app to production ...&quot;
-$oc_cmd tag stage/sample-app:latest prod/sample-app:latest
+$oc_cmd tag stage/sample-app:stable prod/sample-app:stable
 </command>
     </hudson.tasks.Shell>
-    <com.openshift.jenkins.plugins.pipeline.OpenShiftDeployer plugin="openshift-pipeline@1.0.7">
-      <apiURL>https://openshift.default.svc.cluster.local</apiURL>
-      <namespace>prod</namespace>
-      <authToken></authToken>
-      <verbose>false</verbose>
-      <depCfg>sample-app</depCfg>
-    </com.openshift.jenkins.plugins.pipeline.OpenShiftDeployer>
   </builders>
   <publishers>
     <hudson.tasks.Mailer plugin="mailer@1.11">
