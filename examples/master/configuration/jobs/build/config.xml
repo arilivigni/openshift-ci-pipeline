@@ -12,11 +12,6 @@
       <taskName>Build Docker Image</taskName>
       <stageName>Build</stageName>
     </se.diabol.jenkins.pipeline.PipelineProperty>
-    <hudson.plugins.promoted__builds.JobPropertyImpl plugin="promoted-builds@2.24.1">
-      <activeProcessNames>
-        <string>Stage</string>
-      </activeProcessNames>
-    </hudson.plugins.promoted__builds.JobPropertyImpl>
     <com.sonyericsson.rebuild.RebuildSettings plugin="rebuild@1.25">
       <autoRebuild>false</autoRebuild>
       <rebuildDisabled>false</rebuildDisabled>
@@ -37,7 +32,7 @@
   <triggers/>
   <concurrentBuild>false</concurrentBuild>
   <builders>
-    <com.openshift.jenkins.plugins.pipeline.OpenShiftBuilder plugin="openshift-pipeline@1.0.7">
+    <com.openshift.jenkins.plugins.pipeline.OpenShiftBuilder plugin="openshift-pipeline@1.0.7-SNAPSHOT">
       <apiURL>https://openshift.default.svc.cluster.local</apiURL>
       <namespace>stage</namespace>
       <authToken></authToken>
@@ -45,7 +40,8 @@
       <bldCfg>sample-app</bldCfg>
       <commitID></commitID>
       <buildName></buildName>
-      <showBuildLogs>false</showBuildLogs>
+      <showBuildLogs>true</showBuildLogs>
+      <checkForTriggeredDeployments>false</checkForTriggeredDeployments>
     </com.openshift.jenkins.plugins.pipeline.OpenShiftBuilder>
   </builders>
   <publishers/>
