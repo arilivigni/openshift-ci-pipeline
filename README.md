@@ -87,7 +87,7 @@ You have to instantiate the template in both `ci` and `stage` projects.
 
 ## Workflow
 
-You can [watch the youtube](https://www.youtube.com/watch?v=HsdmSaz1zhs)
+You can [watch the youtube](https://youtu.be/IreIK-jICgY)
 video that shows the full workflow. What happens in the video is:
 
 1. When the `sample-app-test` job is started it fetches the [sample-app](sample-app) sources,
