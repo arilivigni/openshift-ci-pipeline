@@ -23,6 +23,11 @@
       - promoted-build:
           names:
             - "Verified"
+    scm:
+      - git:
+          url: https://github.com/mfojtik/sample-app.git
+          branches:
+            - '*/master'
     builders:
       - shell: |
           # Install the rubygems
@@ -47,17 +52,13 @@
           api-url: https://openshift.default.svc.cluster.local
           bld-cfg: sample-app
           namespace: stage
-      - openshift-dep-verify:
-          api-url: https://openshift.default.svc.cluster.local
-          dep-cfg: sample-app
-          namespace: stage
-          replicas: 1
+          show-build-logs: true
 
 - job-template:
     name: 'deploy-stage'
     defaults: os-ci-pipeline-defaults
     description: |
-      Deploys the sample application into the stage project
+      Deploy the application on OpenShift
     concurrent: false
     node: master
     properties:
@@ -70,6 +71,11 @@
           dep-cfg: sample-app
           namespace: stage
           replicas: 1
+      - openshift-img-tagger:
+          api-url: https://openshift.default.svc.cluster.local
+          test-tag: sample-app:latest
+          prod-tag: sample-app:stable
+          namespace: stage
       - openshift-dep-verify:
           api-url: https://openshift.default.svc.cluster.local
           dep-cfg: sample-app
@@ -95,10 +101,6 @@
           echo "Tagging stage/sample-app to production ..."
           $oc_cmd tag stage/sample-app:latest prod/sample-app:latest
 
-      - openshift-deployer:
-          api-url: https://openshift.default.svc.cluster.local
-          dep-cfg: sample-app
-          namespace: prod
     publishers:
       - email:
           recipients: ari@redhat.com

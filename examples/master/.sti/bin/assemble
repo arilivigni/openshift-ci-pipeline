@@ -1,3 +1,13 @@
 #!/bin/bash
 
+# Install jenkins-job-builder
+pushd ${JENKINS_HOME}
+curl -O https://bootstrap.pypa.io/ez_setup.py
+python ez_setup.py --user
+curl -O https://bootstrap.pypa.io/get-pip.py
+python get-pip.py --user
+export PATH=$PATH:./.local/bin
+pip install --user jenkins-job-builder
+popd
+
 exec /usr/libexec/s2i/assemble
