@@ -76,7 +76,7 @@ export PATH=$PATH:./.local/bin
 curl -LOk https://github.com/openstack-infra/jenkins-job-builder/archive/master.zip
 unzip master.zip
 pip install --user jenkins-job-builder --find-links /var/lib/jenkins/jenkins-job-builder-master/
-jenkins-jobs --conf /var/lib/jenkins/jjb_conf.ini update /var/lib/jenkins/os-ci-pipeline.yaml
+#jenkins-jobs --conf /var/lib/jenkins/jjb_conf.ini update /var/lib/jenkins/os-ci-pipeline.yaml
 popd
 
 rm -rf /tmp/war
