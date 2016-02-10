@@ -73,7 +73,9 @@ python ez_setup.py --user
 curl -O https://bootstrap.pypa.io/get-pip.py
 python get-pip.py --user
 export PATH=$PATH:./.local/bin
-pip install --user jenkins-job-builder
+curl -LOk https://github.com/openstack-infra/jenkins-job-builder/archive/master.zip
+unzip master.zip
+pip install --user jenkins-job-builder --find-links /var/lib/jenkins/jenkins-job-builder-master/
 popd
 
 rm -rf /tmp/war
