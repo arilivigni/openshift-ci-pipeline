@@ -1,18 +1,3 @@
 #!/bin/bash
 
-source /opt/openshift/configuration/jenkins-common.sh
-
-# Install jenkins-job-builder
-echo "Installing pip and Jenkins Job Builder"
-pushd ${JENKINS_HOME}
-curl -O https://bootstrap.pypa.io/ez_setup.py
-python ez_setup.py --user
-curl -O https://bootstrap.pypa.io/get-pip.py
-python get-pip.py --user
-export PATH=$PATH:./.local/bin
-curl -LOk https://github.com/openstack-infra/jenkins-job-builder/archive/master.zip
-unzip master.zip
-pip install --user jenkins-job-builder --find-links /var/lib/jenkins/jenkins-job-builder-master/
-popd
-
 exec /usr/libexec/s2i/assemble
