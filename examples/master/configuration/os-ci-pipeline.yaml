@@ -70,7 +70,7 @@
           api-url: https://openshift.default.svc.cluster.local
           dep-cfg: sample-app
           namespace: stage
-          replicas: 1
+          replica-count: 0
       - openshift-img-tagger:
           api-url: https://openshift.default.svc.cluster.local
           test-tag: sample-app:latest
@@ -80,7 +80,7 @@
           api-url: https://openshift.default.svc.cluster.local
           dep-cfg: sample-app
           namespace: stage
-          replicas: 1
+          replica-count: 1
 
 - job-template:
     name: 'deploy-prod'
