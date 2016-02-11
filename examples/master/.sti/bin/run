@@ -67,16 +67,16 @@ if [ -f "${JENKINS_HOME}/credentials.xml.tpl" ]; then
 fi
 
 # Install jenkins-job-builder
-pushd ${JENKINS_HOME}
-curl -O https://bootstrap.pypa.io/ez_setup.py
-python ez_setup.py --user
-curl -O https://bootstrap.pypa.io/get-pip.py
-python get-pip.py --user
-export PATH=$PATH:./.local/bin
-curl -LOk https://github.com/openstack-infra/jenkins-job-builder/archive/master.zip
-unzip master.zip
-pip install --user jenkins-job-builder --find-links /var/lib/jenkins/jenkins-job-builder-master/
-popd
+#pushd ${JENKINS_HOME}
+#curl -O https://bootstrap.pypa.io/ez_setup.py
+#python ez_setup.py --user
+#curl -O https://bootstrap.pypa.io/get-pip.py
+#python get-pip.py --user
+#export PATH=$PATH:./.local/bin
+#curl -LOk https://github.com/openstack-infra/jenkins-job-builder/archive/master.zip
+#unzip master.zip
+#pip install --user jenkins-job-builder --find-links /var/lib/jenkins/jenkins-job-builder-master/
+#popd
 
 rm -rf /tmp/war
 
@@ -90,7 +90,7 @@ fi
 
 # Load Jenkins Jobs
 pushd ${JENKINS_HOME}
-jenkins-jobs --conf /var/lib/jenkins/jjb_conf.ini update /var/lib/jenkins/os-ci-pipeline.yaml
+.local/bin/jenkins-jobs --conf ${JENKINS_HOME}/jjb_conf.ini update ${JENKINS_HOME}/os-ci-pipeline.yaml
 popd
 
 # As argument is not jenkins, assume user want to run his own process, for sample a `bash` shell to explore this image
