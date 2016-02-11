@@ -76,7 +76,6 @@ export PATH=$PATH:./.local/bin
 curl -LOk https://github.com/openstack-infra/jenkins-job-builder/archive/master.zip
 unzip master.zip
 pip install --user jenkins-job-builder --find-links /var/lib/jenkins/jenkins-job-builder-master/
-./.local/bin/jenkins-jobs --conf /var/lib/jenkins/jjb_conf.ini update /var/lib/jenkins/os-ci-pipeline.yaml
 popd
 
 rm -rf /tmp/war
@@ -88,6 +87,11 @@ unset oc_auth oc_cmd KUBERNETES_CONFIG KUBERNETES_CREDENTIALS
 if [[ $# -lt 1 ]] || [[ "$1" == "--"* ]]; then
    exec java $JAVA_OPTS -Dfile.encoding=UTF8 -jar /usr/lib/jenkins/jenkins.war $JENKINS_OPTS "$@"
 fi
+
+# Load Jenkins Jobs
+pushd ${JENKINS_HOME}
+jenkins-jobs --conf /var/lib/jenkins/jjb_conf.ini update /var/lib/jenkins/os-ci-pipeline.yaml
+popd
 
 # As argument is not jenkins, assume user want to run his own process, for sample a `bash` shell to explore this image
 exec "$@"
