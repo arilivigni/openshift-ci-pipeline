@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash -x
 #
 # This script runs the Jenkins server inside the Docker container.
 # It copies the configuration and plugins from /opt/openshift/configuration to
