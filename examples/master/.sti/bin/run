@@ -87,7 +87,7 @@ unset oc_auth oc_cmd KUBERNETES_CONFIG KUBERNETES_CREDENTIALS
 if [[ $# -lt 1 ]] || [[ "$1" == "--"* ]]; then
    # Start Jenkins in background and wait
    java $JAVA_OPTS -Dfile.encoding=UTF8 -jar /usr/lib/jenkins/jenkins.war $JENKINS_OPTS "$@" &
-   sleep 20
+   sleep 60
 
    # Load Jenkins Jobs
    pushd ${JENKINS_HOME}
