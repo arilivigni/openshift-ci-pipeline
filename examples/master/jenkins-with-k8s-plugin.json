@@ -168,10 +168,6 @@
         "strategy": {
           "type": "Recreate",
           "resources": {},
-          "recreateParams": {
-            "pre": {},
-            "post": "${JENKINS_HOME}/.local/bin/jenkins-jobs --conf ${JENKINS_HOME}/jjb_conf.ini update ${JENKINS_HOME}/os-ci-pipeline.yaml"
-          }
         },
         "triggers": [
           {
