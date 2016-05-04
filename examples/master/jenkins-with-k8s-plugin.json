@@ -167,7 +167,7 @@
       "spec": {
         "strategy": {
           "type": "Recreate",
-          "resources": {},
+          "resources": {}
         },
         "triggers": [
           {
