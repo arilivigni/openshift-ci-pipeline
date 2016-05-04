@@ -85,13 +85,22 @@ unset oc_auth oc_cmd KUBERNETES_CONFIG KUBERNETES_CREDENTIALS
 
 # if `docker run` first argument start with `--` the user is passing jenkins launcher arguments
 if [[ $# -lt 1 ]] || [[ "$1" == "--"* ]]; then
+   # Start Jenkins in background and wait
+   java $JAVA_OPTS -Dfile.encoding=UTF8 -jar /usr/lib/jenkins/jenkins.war $JENKINS_OPTS "$@" &
+   sleep 20
+
+   # Load Jenkins Jobs
+   pushd ${JENKINS_HOME}
+   .local/bin/jenkins-jobs --conf ${JENKINS_HOME}/jjb_conf.ini update ${JENKINS_HOME}/os-ci-pipeline.yaml
+   popd
+
+   # Kill jenkins and restart with exec so Jenkins takes over the shell pid
+   pkill -f jenkins
+
+   # Start Jenkins again
    exec java $JAVA_OPTS -Dfile.encoding=UTF8 -jar /usr/lib/jenkins/jenkins.war $JENKINS_OPTS "$@"
 fi
 
-# Load Jenkins Jobs
-pushd ${JENKINS_HOME}
-.local/bin/jenkins-jobs --conf ${JENKINS_HOME}/jjb_conf.ini update ${JENKINS_HOME}/os-ci-pipeline.yaml
-popd
 
 # As argument is not jenkins, assume user want to run his own process, for sample a `bash` shell to explore this image
 exec "$@"
