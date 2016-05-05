@@ -28,6 +28,7 @@
           url: https://github.com/mfojtik/sample-app.git
           branches:
             - '*/master'
+          skip-tag: true
     builders:
       - shell: |
           # Install the rubygems
