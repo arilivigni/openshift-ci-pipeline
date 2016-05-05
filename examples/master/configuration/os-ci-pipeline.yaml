@@ -64,7 +64,7 @@
     node: master
     properties:
       - delivery-pipeline:
-          stage: Depoy
+          stage: Deploy
           task: Application Deploy
     builders:
       - openshift-scaler:
